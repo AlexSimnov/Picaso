@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "picaso"
+version = "0.1.0"
+description = ""
+authors = ["Симонов Алексей <alxxalxx@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+djangorestframework = "^3.14.0"
+celery = "^5.3.6"
+redis = "^5.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
