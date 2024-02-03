@@ -1,0 +1,57 @@
+version: '3'
+
+volumes:
+  media:
+  redis_data:
+  pg_data:
+
+services:
+  db1:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    image: alexsimonscreate/picaso_backend:latest
+    env_file: .env
+    depends_on:
+      - db1
+    volumes:
+      - media:/app/media/
+
+  celery:
+    image: alexsimonscreate/picaso_celery:latest
+    command:
+      - celery
+      - -A
+      - config.celery
+      - worker
+      - -l
+      - INFO
+    volumes:
+      - media:/app/media/
+      - static:/backend_static/
+    depends_on:
+      - backend
+      - redis
+    env_file:
+      - .env
+
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+  
+  nginx:
+    image: alexsimonscreate/picaso_gateway:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - media:/app/media/
+      - static:/staticfiles/
+    depends_on:
+      - backend
