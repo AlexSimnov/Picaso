@@ -1,14 +1,6 @@
 from django.db import models
-from os import path
-import re
 
-PATTERN = r'\.(\w+)$'
-
-
-def upload_to(instance, filename):
-    file_dir = path.join('files',
-                         re.search(PATTERN, filename).group(1), filename)
-    return file_dir
+from .upload import upload_to
 
 
 class File(models.Model):
